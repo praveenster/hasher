@@ -50,7 +50,6 @@ private:
   QLineEdit* generated_hash_;
   QPushButton* compare_button_;
   QLineEdit* pasted_hash_;
-  QPushButton* paste_button_;
   QPushButton* about_button_;
   QPushButton* exit_button_;
 };
