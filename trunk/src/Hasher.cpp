@@ -27,16 +27,18 @@
 Hasher::Hasher(QWidget *parent)
   : QWidget(parent)
 {
-  QGroupBox* data_group = new QGroupBox();
+  QGroupBox* filename_group = new QGroupBox(tr("Select File to hash"));
+  QGroupBox* hash_type_group = new QGroupBox(tr("Select algorithm"));
   QVBoxLayout* main_layout = new QVBoxLayout();
 
   filename_ = new QLineEdit();
   filename_button_ = new QPushButton(tr("Browse"));
 
-  QHBoxLayout* filename_box = new QHBoxLayout();
-  filename_box->addWidget(filename_, Qt::AlignLeft);
-  filename_box->addWidget(filename_button_);
-  filename_box->addStretch();
+  QHBoxLayout* filename_layout = new QHBoxLayout();
+  filename_layout->addWidget(filename_, Qt::AlignLeft);
+  filename_layout->addWidget(filename_button_);
+  filename_layout->addStretch();
+  filename_group->setLayout(filename_layout);
 
   hash_type_ = new QComboBox();
   hash_type_->addItem(tr("MD5"));
@@ -44,47 +46,46 @@ Hasher::Hasher(QWidget *parent)
   hash_type_->addItem(tr("SHA-256"));
 
   generate_button_ = new QPushButton(tr("Generate"));
+  generated_hash_ = new QLineEdit();
+  generated_hash_->setReadOnly(true);
 
-  QHBoxLayout* hash_type_box = new QHBoxLayout();
-  hash_type_box->addWidget(hash_type_, Qt::AlignLeft);
-  hash_type_box->addWidget(generate_button_);
-  hash_type_box->addStretch();
+  QHBoxLayout* hash_type_layout = new QHBoxLayout();
+  hash_type_layout->addWidget(hash_type_, Qt::AlignLeft);
+  hash_type_layout->addWidget(generate_button_);
+  hash_type_layout->addWidget(generated_hash_);
+  hash_type_layout->addStretch();
 
   hash_progress_ = new QProgressBar();
 
-  generated_hash_ = new QLineEdit();
-  generated_hash_->setReadOnly(true);
   compare_button_ = new QPushButton(tr("Compare"));
 
-  QHBoxLayout* compare_box = new QHBoxLayout();
-  compare_box->addWidget(generated_hash_, Qt::AlignLeft);
-  compare_box->addWidget(compare_button_);
-  compare_box->addStretch();
+  QHBoxLayout* compare_layout = new QHBoxLayout();
+  compare_layout->addWidget(compare_button_);
+  compare_layout->addWidget(generated_hash_, Qt::AlignLeft);
+  compare_layout->addStretch();
 
   pasted_hash_ = new QLineEdit();
-  paste_button_ = new QPushButton(tr("Paste"));
 
-  QHBoxLayout* paste_box = new QHBoxLayout();
-  paste_box->addWidget(pasted_hash_, Qt::AlignLeft);
-  paste_box->addWidget(paste_button_);
-  paste_box->addStretch();
+  QHBoxLayout* paste_layout = new QHBoxLayout();
+  paste_layout->addWidget(pasted_hash_, Qt::AlignLeft);
+  paste_layout->insertSpacerItem(0, new QSpacerItem(50, 1));
+  paste_layout->addStretch();
 
   QVBoxLayout* data_box_layout = new QVBoxLayout();
-  data_box_layout->addLayout(filename_box, Qt::AlignTop);
-  data_box_layout->addLayout(hash_type_box);
+  data_box_layout->addLayout(hash_type_layout);
+  data_box_layout->addLayout(compare_layout);
+  data_box_layout->addLayout(paste_layout);
   data_box_layout->addWidget(hash_progress_);
-  data_box_layout->addLayout(compare_box);
-  data_box_layout->addLayout(paste_box);
-  data_group->setLayout(data_box_layout);
+  hash_type_group->setLayout(data_box_layout);
 
   QGroupBox* control_group = new QGroupBox();
   QHBoxLayout* control_box = new QHBoxLayout();
   about_button_ = new QPushButton(tr("About"));
   exit_button_ = new QPushButton(tr("Exit"));
-  control_box->addWidget(about_button_, Qt::AlignLeft);
+  control_box->addWidget(about_button_, Qt::AlignRight);
   control_box->addWidget(exit_button_);
   control_box->addStretch();
-  control_box->insertSpacerItem(0, new QSpacerItem(350, 1));
+  //control_box->insertSpacerItem(0, new QSpacerItem(350, 1));
   control_group->setLayout(control_box);
 
 //  main_layout->addLayout(filename_box, Qt::AlignTop);
@@ -92,7 +93,8 @@ Hasher::Hasher(QWidget *parent)
 //  main_layout->addWidget(hash_progress_);
 //  main_layout->addLayout(compare_box);
 //  main_layout->addLayout(paste_box);
-  main_layout->addWidget(data_group);
+  main_layout->addWidget(filename_group);
+  main_layout->addWidget(hash_type_group);
   main_layout->addWidget(control_group);
   main_layout->addStretch();
 
